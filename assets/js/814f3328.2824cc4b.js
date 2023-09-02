@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkall_in_one_blockchain=self.webpackChunkall_in_one_blockchain||[]).push([[535],{5641:e=>{e.exports=JSON.parse('{"title":"Recent posts","items":[{"title":"\u5728arbitrum\u4e0a\u7684Rust\u5408\u7ea6\u5f00\u53d1\u521d\u4f53\u9a8c","permalink":"/all-in-one-blockchain/blog/arbitrum"}]}')}}]);
