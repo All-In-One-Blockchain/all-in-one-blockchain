@@ -1029,3 +1029,69 @@ https://docs.solana.com/developing/programming-model/runtime
 - https://solang.readthedocs.io/en/latest/
 
 - https://ethereum.org/en/developers/docs/evm/
+
+
+## 测验
+
+1. 能否修改可执行账户的存储方式？
+
+- a. 是的，存储在此账户中的程序可以修改其数据
+- b. 是的，账户的管理者可以修改其数据
+- **c. 不，可执行账户不存储状态，只存储程序的代码**
+- d. 不，可执行账户没有所有者，因此没有人可以修改它们的数据。
+
+:::info
+📍说明：
+
+可执行账户的存储在其创建时被定义，并在其存在期间保持不变。这是Solana区块链设计的特点之一，旨在确保交易执行的高性能和效率。
+:::
+
+2. 在账户方面，权威意味着什么？
+
+- a. 一个拥有账户的程序
+- b. 拥有账户私钥的人
+- **c. 一个可以为账户支付Rent的钱包**
+- d. 一个拥有账户的钱包。
+
+:::info
+📍说明：
+
+账户权限是指账户具有执行特定操作的权利和能力，例如发送交易、更改账户数据或执行与合约和智能合约相关的交易。权限由适当的授权密钥的可用性和正确使用来确定。
+:::
+
+3. 这段代码发生了什么？
+
+```rust
+let (_, _) = solana_program::pubkey::Pubkey::find_program_address(&[b"random-seed"], &program_id);
+```
+
+- a. 基于程序地址和随机种子"random-seed"创建了一个新的PDA。
+- b. 根据程序地址和随机种子"random-seed"来搜索现有的PDA
+- **c. 根据程序地址和种子"random-seed"生成一个随机的PDA地址**
+- d. 根据程序地址和提供的数据，搜索现有的PDA。
+
+:::info
+📍说明：
+
+在给定的代码中，`find_program_address`函数用于根据程序地址`program_id`和提供的种子`"random-seed"`生成一个随机的PDA（程序派生账户）地址。生成的PDA地址将是唯一的，并且取决于程序和种子的组合。
+:::
+
+
+4. 这段代码的目的是什么？
+
+```rust
+let (expected_pda, bump_seed) = Pubkey::find_program_address(&[b"vault"], &program_id);
+let actual_pda = Pubkey::create_program_address(&[b"vault", &[bump_seed]], &program_id)?;
+assert_eq!(expected_pda, actual_pda);
+```
+
+- a. 根据提供的种子和程序ID生成一个程序派生地址（PDA）。
+- b. 它验证了派生的PDA地址与预期的PDA地址是否匹配。
+- c. 它计算PDA的bump种子值。
+- d. 它检查了碰撞种子和程序ID的相等性。
+
+:::info
+ 📍解释：
+
+在这段代码中，`Pubkey::find_program_address`被用来根据种子`b"vault"`和程序ID生成一个基于程序的派生地址。然后，使用生成的`expected_pda`和`bump_seed`值来构建实际的`actual_pda`，使用`Pubkey::create_program_address`方法。随后的`assert_eq!`语句确保派生的`actual_pda`与预期的`expected_pda`相匹配，从而验证PDA地址生成的正确性。
+:::
