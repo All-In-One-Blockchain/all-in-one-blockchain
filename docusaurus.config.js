@@ -36,7 +36,7 @@ function defineSection(section, version = {}, options = {}) {
 const SECTIONS = [
   defineSection('awesome-blockchain-zh'),
   defineSection('arbitrum-layer2'),
-  // defineSection('tutorial-extras'),
+  defineSection('solana'),
 ];
 
 /** @type {import('@docusaurus/types').Config} */
@@ -102,15 +102,15 @@ const config = {
             label: 'Awesome BlockChain Zh',
           },
           {
+            href: '/solana',
+            position: 'left',
+            label: 'Solana Develop Guide',
+          },
+          {
             href: '/arbitrum-layer2',
             position: 'left',
             label: 'Arbitrum',
           },
-          // {
-          //   href: '/tutorial-extras',
-          //   position: 'left',
-          //   label: 'Tutorial Extras',
-          // },
           { to: '/blog', label: 'Blog', position: 'left' },
           {
             href: 'https://github.com/All-In-One-Blockchain/all-in-one-blockchain.git',
