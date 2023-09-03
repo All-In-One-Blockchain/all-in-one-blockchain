@@ -44,7 +44,7 @@ const config = {
   title: 'All in One BlockChain',
   tagline: 'Power by Rustycab',
   url: 'https://www.all-in-one-blockchain.xyz/',
-  baseUrl: '/all-in-one-blockchain',
+  baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
