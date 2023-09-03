@@ -2,7 +2,7 @@
 <rss version="2.0">
     <channel>
         <title>All in One BlockChain Blog</title>
-        <link>https://www.all-in-one-blockchain.xyz/all-in-one-blockchain/blog</link>
+        <link>https://www.all-in-one-blockchain.xyz/blog</link>
         <description>All in One BlockChain Blog</description>
         <lastBuildDate>Sat, 02 Sep 2023 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
@@ -10,8 +10,8 @@
         <language>en</language>
         <item>
             <title><![CDATA[Hello world]]></title>
-            <link>https://www.all-in-one-blockchain.xyz/all-in-one-blockchain/blog/hello</link>
-            <guid>https://www.all-in-one-blockchain.xyz/all-in-one-blockchain/blog/hello</guid>
+            <link>https://www.all-in-one-blockchain.xyz/blog/hello</link>
+            <guid>https://www.all-in-one-blockchain.xyz/blog/hello</guid>
             <pubDate>Sat, 02 Sep 2023 00:00:00 GMT</pubDate>
             <category>blog</category>
             <category>blockchain</category>

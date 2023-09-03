@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkall_in_one_blockchain=self.webpackChunkall_in_one_blockchain||[]).push([[81],{6331:e=>{e.exports=JSON.parse('{"name":"docusaurus-plugin-content-docs","id":"arbitrum-layer2"}')}}]);
