@@ -68,6 +68,8 @@ const config = {
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: false,
+        // Equivalent to `editUrl` but should point to `website` dir instead of `website/docs`.
+        editUrl: 'https://github.com/All-In-One-Blockchain/all-in-one-blockchain.github.io/edit/main/docs',
         blog: {
           showReadingTime: true,
           editUrl:
