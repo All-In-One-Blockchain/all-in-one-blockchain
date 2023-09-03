@@ -67,9 +67,21 @@ const config = {
       '@docusaurus/preset-classic',
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
-        docs: false,
-        // Equivalent to `editUrl` but should point to `website` dir instead of `website/docs`.
-        editUrl: 'https://github.com/All-In-One-Blockchain/all-in-one-blockchain.github.io/edit/main/docs',
+        docs: {
+          // Equivalent to `customDocsPath`.
+          path: 'docs',
+          // Equivalent to `editUrl` but should point to `website` dir instead of `website/docs`.
+          editUrl: 'https://github.com/All-In-One-Blockchain/all-in-one-blockchain.github.io/edit/main/docs',
+          // Equivalent to `docsUrl`.
+          routeBasePath: 'docs',
+          // Remark and Rehype plugins passed to MDX. Replaces `markdownOptions` and `markdownPlugins`.
+          remarkPlugins: [],
+          rehypePlugins: [],
+          // Equivalent to `enableUpdateBy`.
+          showLastUpdateAuthor: true,
+          // Equivalent to `enableUpdateTime`.
+          showLastUpdateTime: true,
+        },
         blog: {
           showReadingTime: true,
           editUrl:
