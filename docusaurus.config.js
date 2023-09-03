@@ -5,6 +5,7 @@ const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 const path = require('path');
+const defaultLocale = 'en';
 
 /**
  * Defines a section with overridable defaults
@@ -67,21 +68,28 @@ const config = {
       '@docusaurus/preset-classic',
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
-        docs: {
-          // Equivalent to `customDocsPath`.
-          path: 'docs',
-          // Equivalent to `editUrl` but should point to `website` dir instead of `website/docs`.
-          editUrl: 'https://github.com/All-In-One-Blockchain/all-in-one-blockchain.github.io/edit/main/docs',
-          // Equivalent to `docsUrl`.
-          routeBasePath: 'docs',
-          // Remark and Rehype plugins passed to MDX. Replaces `markdownOptions` and `markdownPlugins`.
-          remarkPlugins: [],
-          rehypePlugins: [],
-          // Equivalent to `enableUpdateBy`.
-          showLastUpdateAuthor: true,
-          // Equivalent to `enableUpdateTime`.
-          showLastUpdateTime: true,
-        },
+        // docs: {
+        //   // Equivalent to `editUrl` but should point to `website` dir instead of `website/docs`.
+        //   editUrl: 'https://github.com/All-In-One-Blockchain/all-in-one-blockchain.github.io/edit/main/docs',
+        // },
+        // docs: {
+        //   path: 'docs',
+        //   sidebarPath: 'sidebars.cjs',
+        //   // sidebarCollapsible: false,
+        //   // sidebarCollapsed: true,
+        //   editUrl: ({ locale, docPath }) => {
+        //     if (locale !== defaultLocale) {
+        //       return `https://crowdin.com/project/docusaurus-v2/${locale}`;
+        //     }
+        //     // We want users to submit updates to the upstream/next version!
+        //     // Otherwise we risk losing the update on the next release.
+        //     const nextVersionDocsDirPath = 'docs';
+        //     return `https://github.com/All-In-One-Blockchain/all-in-one-blockchain.github.io/edit/main/docss/${nextVersionDocsDirPath}/${docPath}`;
+        //   },
+        //   showLastUpdateAuthor: true,
+        //   showLastUpdateTime: true,
+        // },
+        docs: false,
         blog: {
           showReadingTime: true,
           editUrl:
