@@ -27,7 +27,7 @@ import TabItem from '@theme/TabItem';
 
 ### 账户类型
 
-Solana区块链上有两种类型的账户：可执行账户和非可执行账户。程序是可执行账户，存储着程序的不可变代码。程序的代码首先用Rust或C/C++编写，然后通过LLVM编译器基础设施编译成字节码（在有用链接中了解更多关于LLVM的信息）。👇
+Solana区块链上有两种类型的账户：可执行账户和非可执行账户。程序是可执行账户，存储着程序的不可变代码。程序的代码首先用Rust或C/C++编写，然后通过[LLVM编译器](https://llvm.org/)基础设施编译成字节码。
 
 数据存储和代币余额存储在非可执行账户中，因为它们的数据可以被更改。为了控制谁可以更改这些数据，非可执行账户被分配了一个所有者程序地址。其他程序可以读取另一个账户的数据，但如果它们试图修改该数据，交易将失败。
 
@@ -43,12 +43,12 @@ Solana区块链上有两种类型的账户：可执行账户和非可执行账�
 
 ### 关联代币账户（ATAs）
 
-在Solana中，只有一个Token程序（在有用链接中了解更多关于SPL Token程序的信息），它处理创建新的令牌，这些令牌与许多其他链不同，不是可执行的，只是存储与令牌元数据。因此，PDA的一个最重要的例子是所谓的关联令牌账户ATA（在有用链接中了解更多关于ATA的信息）。这些账户用于存储用户对具体SPL令牌（令牌铸造）的余额。换句话说，给定钱包地址的ATA只是一个由钱包地址本身和令牌铸造组成的程序派生账户。
+在Solana中，只有一个[Token程序](https://spl.solana.com/token)，它处理创建新的令牌，这些令牌与许多其他链不同，不是可执行的，只是存储与令牌元数据。因此，PDA的一个最重要的例子是所谓的[关联令牌账户ATA](https://spl.solana.com/associated-token-account)。这些账户用于存储用户对具体SPL令牌（令牌铸造）的余额。换句话说，给定钱包地址的ATA只是一个由钱包地址本身和令牌铸造组成的程序派生账户。
 
 
 ### 租赁
 
-不幸的是，将所有这些数据存储到单独的账户中是需要付费的。幸运的是，对于开发者来说，这些费用被称为租金，以lamports的形式支付。
+不幸的是，将所有这些数据存储到单独的账户中是需要付费的。幸运的是，对于开发者来说，这些费用被称为租金，以Lamports的形式支付。
 
 :::info
 Solana上的账户可能具有由所有者控制的状态（Account::data），与账户余额（Account::lamports）分开。由于网络上的验证者需要在内存中维护此状态的工作副本，因此网络对此资源消耗收取基于时间和空间的费用，也称为租金。
@@ -60,17 +60,17 @@ Lamports是Solana的代币（SOL）的一部分。可以使用它们在Solana区
 
 租金在两个不同的时间支付：当交易引用时或者一个时期结束时支付。
 
-租金费用在Solana区块链的每个时期结束时收取。一个时期是指领先的验证者仍然有效地生成交易块的时间。您可以在Solana Explorer（👀请参阅有用链接）上查看当前和过去的时期数据。
+租金费用在Solana区块链的每个时期结束时收取。一个时期是指领先的验证者仍然有效地生成交易块的时间。您可以在[Solana Explorer](https://explorer.solana.com/)上查看当前和过去的时期数据。
 
 在撰写本文时，一个时代大约持续两天。如果账户余额为零且无法支付租金，区块链将删除该账户。
 
-一个账户可以通过在其代币余额中持有至少两年的租金来免除租金。估算租金成本的简便方法是使用Solana CLI中的solana rent命令（了解有关使用solana rent命令的更多信息，请参阅有用链接）。通过提供账户的大小（以字节为单位），您将看到每字节的租金、每个时期的租金以及账户免租所需的最低金额。
+一个账户可以通过在其代币余额中持有至少两年的租金来免除租金。估算租金成本的简便方法是使用Solana CLI中的[solana rent命令](https://docs.solana.com/cli/usage#solana-rent)。通过提供账户的大小（以字节为单位），您将看到每字节的租金、每个时期的租金以及账户免租所需的最低金额。
 
-通过关闭账户并将lamports发送回钱包，可以取回租金。
+通过关闭账户并将Lamports发送回钱包，可以取回租金。
 
 ### 如何创建一个账户
 
-要在Solana上创建一个账户，客户端必须生成一个密钥对（公钥和私钥）。然后，客户端使用SystemProgram::CreateAccount调用来注册公钥，并分配所需的数据存储大小以设置该账户。目前，这个大小不能在后期更改，且大小限制为10 MB。如果需要更多的大小，程序可以将数据从一个容量更大的账户复制到另一个账户。
+要在Solana上创建一个账户，客户端必须生成一个密钥对（公钥和私钥）。然后，客户端使用`SystemProgram::CreateAccount`调用来注册公钥，并分配所需的数据存储大小以设置该账户。目前，这个大小不能在后期更改，且大小限制为10 MB。如果需要更多的大小，程序可以将数据从一个容量更大的账户复制到另一个账户。
 
 创建账户时，需要为账户分配一个所有者。只有账户的所有者才能修改存储在账户中的数据。账户创建后的默认所有者被称为“系统程序”。系统程序是一个本地的Solana程序，负责创建账户、分配账户上的数据，并将账户的所有权分配给连接的程序。本地程序是所有Solana验证者必须运行的程序。
 
@@ -148,9 +148,22 @@ fn main() {
 <TabItem value="typescript" label="Typescript">
 
 ```ts
-// todo
-def hello_world():
-  print("Hello, world!")
+const createAccountParams = {
+  fromPubkey: fromPubkey.publicKey,
+  newAccountPubkey: newAccountPubkey.publicKey,
+  lamports: rentExemptionAmount,
+  space,
+  programId: SystemProgram.programId,
+};
+
+const createAccountTransaction = new Transaction().add(
+  SystemProgram.createAccount(createAccountParams)
+);
+
+await sendAndConfirmTransaction(connection, createAccountTransaction, [
+  fromPubkey,
+  newAccountPubkey,
+]);
 ```
 
 </TabItem>
@@ -167,7 +180,7 @@ def hello_world():
 
 ### 如何在Seed上创建一个账户 🤔
 
-要在seed上创建一个账户，客户需要生成一个基本密钥对（公钥和私钥）。然后，需要从指定的seed和程序ID生成派生的公钥。接下来，客户使用SystemProgram::CreateAccountWithSeed调用来注册派生的公钥，并分配所需的数据存储大小以设置该账户。所有后续操作与创建一个由系统程序拥有的账户类似。
+要在`seed`上创建一个账户，客户需要生成一个基本密钥对（公钥和私钥）。然后，需要从指定的`seed`和程序ID生成派生的公钥。接下来，客户使用`SystemProgram::CreateAccountWithSeed`调用来注册派生的公钥，并分配所需的数据存储大小以设置该账户。所有后续操作与创建一个由系统程序拥有的账户类似。
 
 <Tabs>
 <TabItem value="rust" label="Rust">
@@ -184,7 +197,8 @@ fn main() {
     // Create an HTTP RpcClient with specified "confirmed" commitment level
     // "confirmed" - the node will query the most recent block that has been voted on by supermajority of the cluster.
     let rpc_url = String::from("https://api.devnet.solana.com");
-    let rpc_client = RpcClient::new_with_commitment(rpc_url, CommitmentConfig::confirmed());
+
+    let rpc_client = RpcClient::new_with_commitment(rpc_url,CommitmentConfig::confirmed());
 
     // Generate fee payer and base key pairs
     let fee_payer = Keypair::new();
@@ -249,11 +263,26 @@ fn main() {
 ```
 
 </TabItem>
-<TabItem value="py" label="Python">
+<TabItem value="typescript" label="typescript">
 
-```py
-def hello_world():
-  print("Hello, world!")
+```ts
+PublicKey.createWithSeed(basePubkey, seed, programId);
+
+const tx = new Transaction().add(
+  SystemProgram.createAccountWithSeed({
+    fromPubkey: feePayer.publicKey, // funder
+    newAccountPubkey: derived,
+    basePubkey: basePubkey,
+    seed: seed,
+    lamports: 1e8, // 0.1 SOL
+    space: 0,
+    programId: owner,
+  })
+);
+
+console.log(
+  `txhash: ${await sendAndConfirmTransaction(connection, tx, [feePayer, base])}`
+);
 ```
 
 </TabItem>
@@ -323,14 +352,13 @@ use std::str::FromStr;
 
 fn main() {
     // Deploy the program and then provide the resulting program ID
-    let> program_id = Pubkey::from_str("DRivgExW1MG9PRd4WEZjo4ePtUfjmubgStcXT3Fxwapy
-").unwrap();
+    let> program_id = Pubkey::from_str("DRivgExW1MG9PRd4WEZjo4ePtUfjmubgStcXT3Fxwapy").unwrap();
 
     // Create an HTTP RpcClient with specified "confirmed" commitment level
     // "confirmed" - the node will query the most recent block that has been voted on by supermajority of the cluster.
-    let rpc_url = String::from("https://api.devnet.solana.com"
-);
-    let rpc_client = RpcClient::new_with_commitment(rpc_url, CommitmentConfig::confirmed());
+    let rpc_url = String::from("https://api.devnet.solana.com");
+
+    let rpc_client = RpcClient::new_with_commitment(rpc_url,CommitmentConfig::confirmed());
 
     // Generate fee payer and new account key pairs/
     let fee_payer = Keypair::new();
@@ -349,8 +377,8 @@ fn main() {
     }
 
     // Specify account data length
-    let space = 0
-;
+    let space = 0;
+
     // Get minimum balance required to make an account with specified data length rent exempt
     let rent_exemption_amount = rpc_client
         .get_minimum_balance_for_rent_exemption(space)
@@ -380,10 +408,8 @@ fn main() {
         .unwrap();
 
     // Print transaction signature and account address
-    println!("Transaction signature: {create_account_tx_signature}"
-);
-    println!("New account {} created successfully"
-, new_account.pubkey());
+    println!("Transaction signature: {create_account_tx_signature}");
+    println!("New account {} created successfully", new_account.pubkey());
 
     // Create instruction to close an account with provided two accounts:span>
     // 1. Account to be closed (writable, not signer)
@@ -416,10 +442,8 @@ fn main() {
         .unwrap();
 
     // Print transaction signature and account address
-    println!("Transaction signature: {close_account_tx_signature}"
-);
-    println!("New account {} closed successfully"
-, new_account.pubkey());
+    println!("Transaction signature: {close_account_tx_signature}");
+    println!("New account {} closed successfully", new_account.pubkey());
 }
 ```
 
@@ -451,11 +475,11 @@ class HelloWorld {
 
 每个账户元素都是一个元数据集，因此协议可以轻松理解账户的类型和附加信息。元数据包括👇：
 
-- lamports - 账户的SOL余额，以lamports为单位，其中1 SOL = 109 lamports。
-- owner - 这是拥有该账户的程序的地址。
-- executable - 一个布尔变量，表示账户是否包含可执行代码。
-- data - 存储在账户中的原始数据字节数组，无论是存储变量还是可执行代码。
-- rent_epoch - 表示账户将欠租的下一个时期。
+- `lamports` - 账户的SOL余额，以lamports为单位，其中1 SOL = 1000_000_000 lamports。
+- `owner` - 这是拥有该账户的程序的地址。
+- `executable` - 一个布尔变量，表示账户是否包含可执行代码。
+- `data` - 存储在账户中的原始数据字节数组，无论是存储变量还是可执行代码。
+- `rent_epoch` - 表示账户将欠租的下一个时期。
 
 ## 签署人和所有者
 
@@ -466,14 +490,13 @@ class HelloWorld {
 交易包括一个或多个数字签名，每个数字签名对应于交易引用的账户地址
 
 :::info
-
 **签名**
-一个由R（32字节）和S（32字节）组成的64字节ed25519签名。要求R是一个非小阶的打包Edwards点，而S是在0 <= S < L的范围内的标量。这个要求确保了没有签名可塑性。每个交易必须至少有一个用于费用账户的签名。因此，交易中的第一个签名可以被视为交易ID。
+一个由R（32字节）和S（32字节）组成的64字节ed25519签名。要求R是一个非小阶的打包Edwards点，而S是在`0 <= S < L`的范围内的标量。这个要求确保了没有签名可塑性。每个交易必须至少有一个用于费用账户的签名。因此，交易中的第一个签名可以被视为交易ID。
 
 了解更多：[Solana文件/术语](https://docs.solana.com/terminology#signature)
 :::
 
-这些地址中的每一个都必须是一个ed25519密钥对的公钥，而签名则表示持有相应私钥的人签署并因此“授权”了该交易。在这种情况下，该账户被称为签署者。账户是否是签署者是通过账户的元数据来传达给程序的。程序可以利用这些信息来做出权限决策。
+这些地址中的每一个都必须是一个`ed25519`密钥对的公钥，而签名则表示持有相应私钥的人签署并因此“授权”了该交易。在这种情况下，该账户被称为签署者。账户是否是签署者是通过账户的元数据来传达给程序的。程序可以利用这些信息来做出权限决策。
 
 
 ### 所有权和程序的转让
@@ -506,19 +529,19 @@ private key
 ### 关键要点
 
 - PDA是32字节的字符串，看起来像公钥，但没有相应的私钥。
-- findProgramAddress将从programId和seeds（字节集合）确定性地派生出一个PDA。
+- `findProgramAddress`将从`programId`和`seeds`（字节集合）确定性地派生出一个PDA。
 - 使用一个字节的“bump”将一个潜在的PDA从ed25519椭圆曲线上推开
-- 程序可以通过提供种子和碰撞来为其PDA签名，以调用invoke_signed（在有用链接中了解更多信息）
+- 程序可以通过提供种子和碰撞来为其PDA签名，以调用`invoke_signed`（在有用链接中了解更多信息）
 - PDA只能由其衍生的程序进行签名。
-- 除了允许程序为不同的指令签名外，PDA还提供了类似哈希映射的接口来索引账户（在有用链接中了解更多关于账户映射的信息）。
+- 除了允许程序为不同的指令签名外，PDA还提供了类似哈希映射的接口来[索引账户](https://creatorsdao.github.io/all-in-one-solana/cookbook-zh/guides/account-maps)。
 
 ### 良好的实践
 
 您可以遵循以下关于使用PDA的建议👉：
 
-- 在需要存储用户数据时，始终使用个人数字助理（PDA），而不是将其存储在程序存储器上。
-- 通过使用find_program_address重新生成给定的PDA地址来验证它。如果您的程序需要尽可能少地使用gas，您可以将find_program_address保留在客户端，并仅验证该账户尚未创建或初始化。
-- 使用所有相关账户来为find_program_address函数提供一个种子，并使用枚举来生成种子，以避免种子之间的冲突。
+- 在需要存储用户数据时，始终使用PDA，而不是将其存储在程序存储器上。
+- 通过使用`find_program_address`重新生成给定的PDA地址来验证它。如果您的程序需要尽可能少地使用gas，您可以将`find_program_address`保留在客户端，并仅验证该账户尚未创建或初始化。
+- 使用所有相关账户来为`find_program_address`函数提供一个种子，并使用枚举来生成种子，以避免种子之间的冲突。
 
 ### 如何创建PDA账户
 
@@ -529,9 +552,9 @@ private key
 
 要理解PDA背后的概念，可以考虑一下PDA并非技术上创造出来的，而是被发现的。PDA是由种子和程序ID的组合生成的。这个种子和程序ID的组合会通过sha256哈希函数运行，以确定它们是否生成了一个位于ed25519椭圆曲线上的公钥。
 
-find_program_address（在有用链接中了解如何使用此函数）从program_id和seeds（字节集合）确定性地派生出一个PDA。
+`find_program_address`（在有用链接中了解如何使用此函数）从`program_id`和`seeds`（字节集合）确定性地派生出一个PDA。
 
-当生成一个PDA时，findProgramAddress将返回地址和用于将地址从椭圆曲线上移除的bump。有了这个bump，程序可以为需要其PDA的任何指令进行签名。
+当生成一个PDA时，`findProgramAddress`将返回地址和用于将地址从椭圆曲线上移除的`bump`。有了这个`bump`，程序可以为需要其PDA的任何指令进行签名。
 
 ```rust
 
@@ -540,7 +563,7 @@ find_program_address（在有用链接中了解如何使用此函数）从progra
 let ( pda, bump_seed) = Pubkey::find_program_address(&[b"random-seed"], &program_id);
 ```
 
-创建一个PDA基本上意味着用空间初始化地址并设置其状态。一个普通的密钥对账户可以在我们的程序之外创建，然后传递给它的状态初始化。不幸的是，对于PDA来说，它是在链上创建的，因为它无法代表自己签名。因此，我们使用invoke_signed来传递PDA的种子，以及资金账户的签名，从而创建一个PDA账户。
+创建一个PDA基本上意味着用空间初始化地址并设置其状态。一个普通的密钥对账户可以在我们的程序之外创建，然后传递给它的状态初始化。不幸的是，对于PDA来说，它是在链上创建的，因为它无法代表自己签名。因此，我们使用`invoke_signed`来传递PDA的种子，以及资金账户的签名，从而创建一个PDA账户。
 
 这个函数需要3个参数👉:
 
@@ -657,17 +680,17 @@ Solana程序通常在其他区块链上被称为“智能合约”，它们是�
 - 所有的程序都是无状态的：它们与之交互的任何数据都存储在通过指令传递的单独账户中。
 - 所有程序都由BPF Loader拥有并由Solana Runtime执行（在有用链接中了解更多关于Solana Runtime的信息）。
 - 开发者最常用的编程语言是Rust或C++，但可以选择任何针对LLVM的BPF后端的语言（在有用链接中了解更多关于BPF的信息）。
-- 所有程序都有一个单一的入口点，指令处理在此处进行（即process_instruction）；参数始终包括：
-    - program_id: PubKey
-    - accounts: array account
-    - instruction_data : byte array
+- 所有程序都有一个单一的入口点，指令处理在此处进行（即`process_instruction`）；参数始终包括：
+    - `program_id`: PubKey
+    - `accounts`: array account
+    - `instruction_data`: byte array
 
 ### 程序类型
 
 Solana区块链有两种类型的程序👇：
 
-- Native programs 本地程序
-- On chain programs 链上程序
+- 本地程序
+- 链上程序
 
 ### 本地程序
 
@@ -706,17 +729,16 @@ Solana区块链有两种类型的程序👇：
 
 大多数基于Rust的程序遵循以下架构（文件 - 描述）👇：
 
-- lib.rs - 注册模块
-- entrypoint.rs - 程序的入口点
-- instruction.rs - 程序API，（反）序列化指令数据
-- processor.rs - 程序逻辑
-- state.rs - 程序对象，（反）序列化状态
-- 错误.rs - 程序特定错误
+- `lib.rs` - 注册模块
+- `entrypoint.rs` - 程序的入口点
+- `instruction.rs` - 程序API，（反）序列化指令数据
+- `processor.rs` - 程序逻辑
+- `state.rs` - 程序对象，（反）序列化状态
+- `error.rs` - 程序特定错误
 
-实际上，一个lib.rs模块就足够了，但将程序拆分为上述模块是一个好的实践🤓。
+实际上，一个`lib.rs`模块就足够了，但将程序拆分为上述模块是一个好的实践🤓。
 
 ## 跨程序调用（CPIs）
-
 
 ### 🤓 定义
 
@@ -726,21 +748,21 @@ Solana区块链有两种类型的程序👇：
 
 - 跨程序调用（CPI）是一个程序对另一个程序的调用，目标是调用的程序上的特定指令。
 - CPI允许调用程序将其签名者特权扩展到被调用程序。
-- 程序可以使用指令中的invoke或invoke_signed来执行CPI。
-- 当所有必需的签名在调用之前都是可访问的时，使用invoke，无需PDAs充当签署者。
-- 在需要调用程序的PDA作为CPI中的签署者时，使用invoke_signed。
+- 程序可以使用指令中的`invoke`或`invoke_signed`来执行CPI。
+- 当所有必需的签名在调用之前都是可访问的时，使用`invoke`，无需PDAs充当签署者。
+- 在需要调用程序的PDA作为CPI中的签署者时，使用`invoke_signed`。
 - 在将一个CPI发送给另一个程序后，被调用程序可以向其他程序发起进一步的CPI，最多可以达到4层深度
 
 ### 如何制作CPI
 
-CPIs是使用solana_program crate中的invoke或invoke_signed函数创建的。您使用invoke函数来传递原始交易签名，该签名已传递到您的程序中。您使用invoke_signed函数来让您的程序为其PDAs进行“签名”。
+CPIs是使用`solana_program crate`中的`invoke`或`invoke_signed`函数创建的。您使用`invoke`函数来传递原始交易签名，该签名已传递到您的程序中。您使用`invoke_signed`函数来让您的程序为其PDAs进行“签名”。
 
-在创建不需要任何PDA作为签名者的CPI时，使用invoke函数。在创建CPI时，Solana运行时将原始签名传递给被调用程序。
+在创建不需要任何PDA作为签名者的CPI时，使用`invoke`函数。在创建CPI时，Solana运行时将原始签名传递给被调用程序。
 
 调用函数需要2个参数👉:
 
-- instruction - 调用指令。
-- account_infos - 根据指示所需的账户。
+- `instruction` - 调用指令。
+- `account_infos` - 根据指示所需的账户。
 
 <Tabs>
 <TabItem value="rust" label="Rust">
@@ -858,17 +880,17 @@ class HelloWorld {
 </TabItem>
 </Tabs>
 
-要创建一个需要PDA作为签名者的CPI，请使用invoke_signed函数，并提供必要的种子来派生调用程序所需的PDA。
+要创建一个需要PDA作为签名者的CPI，请使用`invoke_signed`函数，并提供必要的种子来派生调用程序所需的PDA。
 
-invoke_signed函数需要3个参数👉:
+`invoke_signed`函数需要3个参数👉:
 
-- instruction - 调用指令。
-- account_info - 根据指示所需的账户，其中一个账户需要PDA作为签署人。
-- signers_seeds - 用于派生PDA的种子。
+- `instruction` - 调用指令。
+- `account_info` - 根据指示所需的账户，其中一个账户需要PDA作为签署人。
+- `signers_seeds` - 用于派生PDA的种子。
 
-虽然PDA本身没有私钥，但它仍然可以通过CPI作为指令的签名者。为了验证PDA是否属于调用程序，生成PDA所需的种子必须包含在signers_seeds中作为签名者。
+虽然PDA本身没有私钥，但它仍然可以通过CPI作为指令的签名者。为了验证PDA是否属于调用程序，生成PDA所需的种子必须包含在`signers_seeds`中作为签名者。
 
-Solana运行时将使用提供的种子和调用程序的程序ID内部调用create_program_address。然后将生成的PDA与指令中提供的地址进行比较。如果匹配成功，则认为PDA是有效的签名者。
+Solana运行时将使用提供的种子和调用程序的程序ID内部调用`create_program_address`。然后将生成的PDA与指令中提供的地址进行比较。如果匹配成功，则认为PDA是有效的签名者。
 
 <Tabs>
 <TabItem value="rust" label="Rust">
@@ -963,7 +985,7 @@ class HelloWorld {
 
 这个特权扩展依赖于程序是不可变的事实，除非在程序升级的特殊情况下。
 
-在转移令牌程序的情况下，运行时可以安全地将交易的签名视为令牌指令的签名。当运行时看到令牌指令引用alice_pubkey时，它会在acme指令中查找该密钥，以查看该密钥是否对应于已签名的账户。在这种情况下，确实是这样，并且授权令牌程序修改Alice的账户。
+在转移令牌程序的情况下，运行时可以安全地将交易的签名视为令牌指令的签名。当运行时看到令牌指令引用`alice_pubkey`时，它会在`acme`指令中查找该密钥，以查看该密钥是否对应于已签名的账户。在这种情况下，确实是这样，并且授权令牌程序修改Alice的账户。
 
 ### 可重入性
 
