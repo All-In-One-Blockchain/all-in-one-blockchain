@@ -394,7 +394,7 @@ pub struct CpiReturnAccount {
 
 ```bash
 [dependencies]
-anchor-lang = "0.27.0"
+anchor-lang = "0.28.0"
 callee = { path = "../callee", features = ["cpi"] }
 ```
 
@@ -426,7 +426,7 @@ pub struct CpiReturnContext<'info> {
 是时候开始实施能够进行CPI调用的方法了。在Anchor中，它将如下所示👇
 
 ```rust
-pub fn cpi_call_return_u64(ctx: Context) -> Result<()> {
+pub fn cpi_call_return_u64(ctx: Context<CpiReturnContext>) -> Result<()> {
     let cpi_program = ctx.accounts.cpi_return_program.to_account_info();
     let cpi_accounts = CpiReturn {
         account: ctx.accounts.cpi_return.to_account_info(),
@@ -483,7 +483,7 @@ anchor_lang::solana_program::log::sol_log_data(&[&solana_return.try_to_vec().unw
 让我们还添加一些调用 return_vec 和 return_struct 方法的方法👉:
 
 ```rust
-pun fn cpi_call_return_struct(ctx: Context) -> Result<()> {
+pub fn cpi_call_return_struct(ctx: Context<CpiReturnContext>) -> Result<()> {
     let cpi_program = ctx.accounts.cpi_return_program.to_account_info();
     let cpi_accounts = CpiReturn {
         account: ctx.accounts.cpi_return.to_account_info(),
@@ -491,11 +491,13 @@ pun fn cpi_call_return_struct(ctx: Context) -> Result<()> {
     let cpi_ctx = CpiContext::new(cpi_program, cpi_accounts);
     let result = callee::cpi::return_struct(cpi_ctx)?;
     let solana_return = result.get();
-    anchor_lang::solana_program::log::sol_log_data(&[&&solana_return.try_to_vec().unwrap()]);
-    ok(())
+
+    anchor_lang::solana_program::log::sol_log_data(&[&solana_return.try_to_vec().unwrap()]);
+
+    Ok(())
 }
 
-pub fn cpi_call_return_vec(ctx: Context) -> Result<()> {
+pub fn cpi_call_return_vec(ctx: Context<CpiReturnContext>) -> Result<()> {
     let cpi_program = ctx.accounts.cpi_return_program.to_account_info();
     let cpi_accounts = CpiReturn {
         account: ctx.accounts.cpi_return.to_account_info(),
@@ -529,17 +531,16 @@ pub struct Struct {
 现在让我们在代码中实现这些方法本身，它们将返回一个特定的数值，一个包含元素1、2、3的向量，以及一个包含值1和2的结构体👉:
 
 ```rust
-
-pub fn return_u64(_ctx: Context) -> Result {
-    ok(99)
+pub fn return_u64(_ctx: Context<ReturnContext>) -> Result<u64> {
+    Ok(99)
 }
 
-pub fn return_struct(_ctx: Context) -> Result {
-    ok(Struct { a: 1, b: 2 })
+pub fn return_struct(_ctx: Context<ReturnContext>) -> Result<Struct> {
+    Ok(Struct { a: 1, b: 2 })
 }
 
-pub fn return_vec(_ctx: Context>) -> Result> {
-    ok(vec![1, 2, 3])
+pub fn return_vec(_ctx: Context<ReturnContext>) -> Result<Vec<u8>> {
+    Ok(vec![1, 2, 3])
 }
 ```
 
@@ -548,11 +549,10 @@ pub fn return_vec(_ctx: Context>) -> Result> {
 ```rust
 use anchor_lang::prelude::*;
 use callee::cpi::accounts::CpiReturn;
-use callee::program::Callee;
+use callee::program::Caller;
 use callee::{self, CpiReturnAccount};
 
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
-
+declare_id!("GrvgrRzLjXQdmGY7gAy1LKdmBASFncxyrhSrdtU2tZB9");
 
 #[program]
 pub mod caller {
@@ -564,7 +564,7 @@ pub mod caller {
         pub b: u64,
     }
 
-    pub fn cpi_call_return_u64(ctx: Context) -> Result<()> {
+    pub fn cpi_call_return_u64(ctx: Context<CpiReturnContext>) -> Result<()> {
         let cpi_program = ctx.accounts.cpi_return_program.to_account_info();
         let cpi_accounts = CpiReturn {
             account: ctx.accounts.cpi_return.to_account_info(),
@@ -573,10 +573,10 @@ pub mod caller {
         let result = callee::cpi::return_u64(cpi_ctx)?;
         let solana_return = result.get();
         anchor_lang::solana_program::log::sol_log_data(&[&solana_return.try_to_vec().unwrap()]);
-        ok(())
+        Ok(())
     }
 
-    pub fn cpi_call_return_struct(ctx: Context) -> Result<()> {
+    pub fn cpi_call_return_struct(ctx: Context<CpiReturnContext>) -> Result<()> {
         let cpi_program = ctx.accounts.cpi_return_program.to_account_info();
         let cpi_accounts = CpiReturn {
             account: ctx.accounts.cpi_return.to_account_info(),
@@ -584,11 +584,13 @@ pub mod caller {
         let cpi_ctx = CpiContext::new(cpi_program, cpi_accounts);
         let result = callee::cpi::return_struct(cpi_ctx)?;
         let solana_return = result.get();
-        anchor_lang::solana_program::log::sol_log_data(&[&solana_return.try_to_vec,().unwrap()]);
-        ok(())
+
+        anchor_lang::solana_program::log::sol_log_data(&[&solana_return.try_to_vec().unwrap()]);
+
+        Ok(())
     }
 
-    pub fn cpi_call_return_vec(ctx: Context) -> Result<()> {
+    pub fn cpi_call_return_vec(ctx: Context<CpiReturnContext>) -> Result<()> {
         let cpi_program = ctx.accounts.cpi_return_program.to_account_info();
         let cpi_accounts = CpiReturn {
             account: ctx.accounts.cpi_return.to_account_info(),
@@ -597,31 +599,31 @@ pub mod caller {
         let result = callee::cpi::return_vec(cpi_ctx)?;
         let solana_return = result.get();
         anchor_lang::solana_program::log::sol_log_data(&[&solana_return.try_to_vec().unwrap()]);
-        ok(())
+        Ok(())
     }
 
-    pub fn return_u64(_ctx: Context) -> Result {
-        ok(99)
+    pub fn return_u64(_ctx: Context<ReturnContext>) -> Result<u64> {
+        Ok(99)
     }
 
-    pub fn return_struct(_ctx: Context) -> Result {
-        ok(Struct { a: 1, b: 2 })
+    pub fn return_struct(_ctx: Context<ReturnContext>) -> Result<Struct> {
+        Ok(Struct { a: 1, b: 2 })
     }
 
-    pub fn return_vec(_ctx: Context) -> Result> {
-        ok(vec![1, 2, 3])
+    pub fn return_vec(_ctx: Context<ReturnContext>) -> Result<Vec<u8>> {
+        Ok(vec![1, 2, 3])
     }
 }
+
+#[derive(Accounts)]
+pub struct ReturnContext {}
 
 #[derive(Accounts)]
 pub struct CpiReturnContext<'info> {
     #[account(mut)]
     pub cpi_return: Account<'info, CpiReturnAccount>,
-    pub cpi_return_program: Program<'info, Callee>,
+    pub cpi_return_program: Program<'info, Caller>,
 }
-
-#[derive(Accounts)]
-pub struct ReturnContext {}
 ```
 
 用生成的地址替换declare_id!宏中的地址。为此，请调用`anchor keys list`
